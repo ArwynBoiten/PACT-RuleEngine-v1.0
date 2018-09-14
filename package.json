@@ -1,8 +1,8 @@
 {
-  "name": "PACT Rule-Engine",
-  "version": "1.0",
-  "description": "",
-  "main": "src/server.js",
+  "name": "pact-rule-Engine",
+  "version": "1.0.0",
+  "description": "Rule-engine for pact application.",
+  "main": "src/api/server.js",
   "scripts": {
     "build": ". build.sh",
     "run": ". run.sh"
