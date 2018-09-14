@@ -1,0 +1,20 @@
+{
+  "name": "PACT Rule-Engine",
+  "version": "1.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "build": ". build.sh",
+    "run": ". run.sh"
+  },
+  "keywords": [],
+  "author": "Arwyn Boiten",
+  "license": "ISC",
+  "dependencies": {
+    "arraylist": "^0.1.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "node-rules": "^4.0.2",
+    "npm": "^6.4.0"
+  }
+}

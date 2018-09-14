@@ -1,0 +1,1 @@
+docker build -t pact-re:0.1 .
