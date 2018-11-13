@@ -3,45 +3,47 @@
  *****************************/
 
 var RuleEngine = require("node-rules");
-var Rules = require("./Rules");
-var R = new RuleEngine();
+var Rules = require("./RuleLoader");
 
-function runRuleEngine(fact, callback){
-    R.execute(fact, function (data) {
-        if (data.result) {
-            console.log("[RULE ENGINE] Rules executed successful.");
-        } else {
-            console.error("[RULE ENGINE] Blocked, Reason:" + data.reason);
-        }
-        return callback(data);
+
+function executeRule(facts, rule, _index, callback) {
+    var R = new RuleEngine();
+    R.register(rule);
+    R.execute(facts, function(_data) {
+        return callback({ index: _index,  data: _data });
     });
-};
+}
 
 /* Make the following methods available to import in app.js */
 module.exports = {
 
-    runRules: function(facts, callback) {
-        for(var i = 0; i < Rules.list.length;i++) {
-            R.register(Rules.list[i]);
-        }
+    runRules: function(facts, group, callback) {
 
-        runRuleEngine(facts, function(response){
-            return callback(response);
+        var rules = Rules.rules[group];
+        var results = [];
+
+        rules.forEach(function(rule, index, array){
+            executeRule(facts, rule, index, function (response) {
+                if(response.data.result){
+                    results.push(response.data.reason);
+                } else {
+                    var failedRule = rules[response.index].name;
+                    callback("{\"error\":  \"" + failedRule + "\"}");
+                }
+
+                if(results.length == array.length){
+                    callback(results);
+                }
+            });
         });
+
     },
 
-    runRulesByGroup: function(facts, group, callback) {
-        for(var i = 0; i < Rules.list.groups.group.length;i++) {
-            R.register(Rules.list.groups.group[i]);
-        }
-
-        runRuleEngine(facts, function(response){
-            return callback(response);
-        });
+    getRules: function(group){
+        return Rules.parameters[group];
     },
 
-
-    getRules: function(){
-        return Rules.list;
+    getSets: function () {
+        return Rules;
     }
 };

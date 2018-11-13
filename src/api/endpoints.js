@@ -6,23 +6,20 @@ var express = require('express');
 var router = express.Router();
 var RuleEngine = require('./../RuleEngine');
 
-router.get('/', function(req, res){
-    res.json({endpoints: [
-        {age: "/rules (all) [POST]"}
-    ]});
-});
-
-router.route('/rules')
+router.route('/preset/:group')
     .post(function(req, res) {
-        RuleEngine.runRules(req.body, function (response) {
-            res.json(response);
+        RuleEngine.runRules(req.body, req.params.group, function (data) {
+            res.send(data);
         });
         console.log("[HTTP Server] Call on endpoint /rules [POST]")
     })
     .get(function (req, res) {
-        res.json({"message": 'This endpoint is POST-only.'});
+        res.send(RuleEngine.getRules(req.params.group));
     });
 
-
+router.route('/preset')
+    .get(function (req, res) {
+       res.send(RuleEngine.getSets());
+    });
 
 exports.router = router;
